@@ -3,7 +3,7 @@ import requests
 
 def get_rating_list():
     try:
-        ratings_db = requests.get('https://hl-backend-a6uq.onrender.com/api/hlshop/training/get-rating-for-python-service')
+        ratings_db = requests.get('https://hlshop.azurewebsites.net/api/hlshop/training/get-rating-for-python-service')
         ratings_db.raise_for_status()  # Raises exception for non-200 responses
         ratings_data = ratings_db.json()['data']
 
