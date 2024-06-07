@@ -18,9 +18,7 @@ jobs:
           python-version: "3.x"
 
       - name: Install Dependencies
-        run: |
-        pip install -r requirements.txt
-        uvicorn main:app --reload
+        run: pip install -r requirements.txt
 
       - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v2
