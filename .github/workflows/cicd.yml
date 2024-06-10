@@ -10,7 +10,7 @@ on:
 env:
   AZURE_WEBAPP_NAME: hlshop-rcm # set this to your application's name
   WORKING_DIRECTORY: "." # set this to the path to your path of working directory inside github repository, defaults to the repository root
-  PYTHON_VERSION: "3.9.19" # set the version to use
+  PYTHON_VERSION: "3.9" # set the version to use
   STARTUP_COMMAND: "python3 main.py" # set this to the startup command required to start the gunicorn server. default it is empty
 
 jobs:
@@ -29,8 +29,7 @@ jobs:
       - name: python install
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
-          sudo apt install python${{ env.PYTHON_VERSION }}-venv
-          python -m venv --copies antenv
+          python${{ env.PYTHON_VERSION }} -m venv antenv
           source antenv/bin/activate
           pip install setuptools
           pip install -r requirements.txt
