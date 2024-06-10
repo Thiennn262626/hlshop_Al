@@ -1,37 +1,37 @@
-# Python on Linux Web App
-# Build a Python project (using Django/Flask/Bottle frameworks) and deploy it to Azure as a Linux web app.
-name: Deploy Python package to Azure Web App as a Linux web app.
+# # Python on Linux Web App
+# # Build a Python project (using Django/Flask/Bottle frameworks) and deploy it to Azure as a Linux web app.
+# name: Deploy Python package to Azure Web App as a Linux web app.
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    environment:
-      name: "Production"
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    steps:
-      # checkout the repo
-      - uses: actions/checkout@v4
-      # setup python
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.9"
-      # install dependencies
-      - name: python install
-        # working-directory: .
-        run: |
-          python -m venv antenv
-          source antenv/bin/activate
-          pip install -r requirements.txt
+# jobs:
+#   build-and-deploy:
+#     runs-on: ubuntu-latest
+#     environment:
+#       name: "Production"
+#       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+#     steps:
+#       # checkout the repo
+#       - uses: actions/checkout@v4
+#       # setup python
+#       - name: Setup Python
+#         uses: actions/setup-python@v5
+#         with:
+#           python-version: "3.9"
+#       # install dependencies
+#       - name: python install
+#         # working-directory: .
+#         run: |
+#           python -m venv antenv
+#           source antenv/bin/activate
+#           pip install -r requirements.txt
 
-      - name: Deploy to Azure App Service
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: hlshop-rcm
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: .
+#       - name: Deploy to Azure App Service
+#         uses: azure/webapps-deploy@v2
+#         with:
+#           app-name: hlshop-rcm
+#           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+#           package: .
