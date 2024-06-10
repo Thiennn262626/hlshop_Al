@@ -10,22 +10,23 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    environment: dev
+    environment:
+      name: "Production"
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     steps:
       # checkout the repo
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       # setup python
       - name: Setup Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v5
         with:
           python-version: "3.9"
       # install dependencies
       - name: python install
-        working-directory: .
+        # working-directory: .
         run: |
-          python3.9 -m venv antenv
+          python -m venv antenv
           source antenv/bin/activate
-          pip install setuptools
           pip install -r requirements.txt
 
       - name: Deploy to Azure App Service
