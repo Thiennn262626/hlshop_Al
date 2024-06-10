@@ -7,12 +7,6 @@ on:
     branches:
       - main
 
-env:
-  AZURE_WEBAPP_NAME: hlshop-rcm # set this to your application's name
-  WORKING_DIRECTORY: "." # set this to the path to your path of working directory inside github repository, defaults to the repository root
-  PYTHON_VERSION: "3.9" # set the version to use
-  STARTUP_COMMAND: "python3 main.py" # set this to the startup command required to start the gunicorn server. default it is empty
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -24,19 +18,19 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v1
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
+          python-version: "3.9"
       # install dependencies
       - name: python install
-        working-directory: ${{ env.WORKING_DIRECTORY }}
+        working-directory: .
         run: |
-          python${{ env.PYTHON_VERSION }} -m venv antenv
+          python3.9 -m venv antenv
           source antenv/bin/activate
           pip install setuptools
           pip install -r requirements.txt
 
-      # deploy web app
-      - uses: azure/webapps-deploy@v2
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          package: ${{ env.WORKING_DIRECTORY }}
+          app-name: hlshop-rcm
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: .
