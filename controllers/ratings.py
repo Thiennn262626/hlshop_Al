@@ -1,23 +1,28 @@
 import pandas as pd
-import requests
+from dbs.connection_hander import db_connection
+
 
 def get_rating_list():
-    try:
-        ratings_db = requests.get('https://hlshop.azurewebsites.net/api/hlshop/training/get-rating-for-python-service')
-        ratings_db.raise_for_status()  # Raises exception for non-200 responses
-        ratings_data = ratings_db.json()['data']
+    ratings_db = db_connection.fetch_data(
+        "SELECT r.id_user AS userId, p.id AS productId, r.product_quality AS rating, r.created_date AS timestamp "
+        "FROM [Rating] AS r "
+        "INNER JOIN ProductSku AS ps ON r.product_sku_id = ps.id "
+        "INNER JOIN Product AS p ON ps.idProduct = p.id "
+        "ORDER BY r.id_user"
+    )
+    dataOriginal = [
+        [
+            rating[0],
+            rating[1],
+            rating[2],
+            rating[3].strftime("%Y-%m-%d %H:%M:%S"),
+        ]
+        for rating in ratings_db
+    ]
+    print("data", len(dataOriginal))
 
-        data_original = []
-        for rating in ratings_data:
-            user_id = rating.get('userId')
-            product_id = rating.get('productId')
-            rating_val = rating.get('rating')
-            timestamp = rating.get('timestamp')
-            if user_id and product_id and rating_val and timestamp:
-                data_original.append([user_id, product_id, rating_val, timestamp])
+    ratings_df = pd.DataFrame(
+        dataOriginal, columns=["userId", "productId", "rating", "timestamp"]
+    )
 
-        ratings_df = pd.DataFrame(data_original, columns=["userId", "productId", "rating", "timestamp"])
-        return ratings_df
-    except requests.exceptions.RequestException as e:
-        print("Error fetching data from API:", e)
-        return None
+    return ratings_df

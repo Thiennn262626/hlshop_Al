@@ -18,15 +18,3 @@ class Loader():
             lambda x: self.productid2idx[x]
         )
         self.ratings.userId = ratings_df.userId.apply(lambda x: self.userid2idx[x])
-
-        # self.x = self.ratings.drop(["rating", "timestamp"], axis=1).values
-        # self.y = self.ratings["rating"].values
-        # self.x, self.y = torch.tensor(self.x), torch.tensor(
-        #     self.y
-        # ) 
-
-    # def __getitem__(self, index):
-    #     return (self.x[index], self.y[index])
-
-    # def __len__(self):
-    #     return len(self.ratings)

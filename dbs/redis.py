@@ -18,8 +18,8 @@ class Redis:
 
     def set_redis_data(self, key, value, expiration_time=None):
         self.r.set(key, json.dumps(value))
-        if expiration_time is not None:
-            self.set_expiration_time(key, expiration_time)
+        # if expiration_time is not None:
+        #     self.set_expiration_time(key, expiration_time)
 
     def get_redis_data(self, key):
         value = self.r.get(key)

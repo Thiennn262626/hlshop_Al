@@ -35,7 +35,7 @@ def train_full():
             ]
             print(f"{u}: {idUser} - {recommended_items}: {values}")
             key = f"collaborative_filtering_user_{idUser}"
-            redis_instance.set_redis_data(key, values, 36000)
+            redis_instance.set_redis_data(key, values)
     return make_response(jsonify({"result": "Training completed"}), 200)
 
 @app.route('/get-recommendation-by-user/<string:user_id>', methods=['GET'])
@@ -59,7 +59,7 @@ def get_recommendation_by_user(user_id):
     ]
     print(f"{user_id}: {recommended_items}: {values}")
     key = f"collaborative_filtering_user_{user_id}"
-    redis_instance.set_redis_data(key, values, 600)
+    redis_instance.set_redis_data(key, values)
 
     return make_response(jsonify({"result": values}), 200)
 
