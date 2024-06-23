@@ -67,4 +67,4 @@ def get_recommendation_by_user(user_id):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=3456)
+    app.run(host="0.0.0.0", port=80, debug=True)
