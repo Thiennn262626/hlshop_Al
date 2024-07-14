@@ -30,4 +30,4 @@ class Redis:
     def set_expiration_time(self, key, time):
         self.r.expire(key, time)
 
-redis_instance = Redis()
+# redis_instance = Redis()

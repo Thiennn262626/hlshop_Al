@@ -14,5 +14,7 @@ class ConnectionHandler:
         cursor.execute(query)
         rows = cursor.fetchall()
         return rows
+    def close_connection(self):
+        self.conn.close()
 
-db_connection = ConnectionHandler()
+# db_connection = ConnectionHandler()

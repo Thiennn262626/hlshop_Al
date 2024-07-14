@@ -1,14 +1,36 @@
 import pandas as pd
-from dbs.connection_hander import db_connection
+from dbs.connection_hander import ConnectionHandler
 
-
+# 		WITH RankedRatings AS (
+#     SELECT
+#         r.id_user AS userId,
+#         p.id AS productId,
+#         r.product_quality AS rating,
+#         r.created_date AS timestamp,
+#         ROW_NUMBER() OVER (PARTITION BY r.id_user, p.id ORDER BY r.created_date DESC) AS row_num
+#     FROM
+#         [Rating] AS r
+#     INNER JOIN
+#         ProductSku AS ps ON r.product_sku_id = ps.id
+#     INNER JOIN
+#         Product AS p ON ps.idProduct = p.id
+# )
+# SELECT
+#     userId,
+#     productId,
+#     rating,
+#     timestamp
+# FROM
+#     RankedRatings
+# WHERE
+#     row_num = 1
+# ORDER BY
+#     userId;
 def get_rating_list():
+    db_connection = ConnectionHandler()
     ratings_db = db_connection.fetch_data(
-        "SELECT r.id_user AS userId, p.id AS productId, r.product_quality AS rating, r.created_date AS timestamp "
-        "FROM [Rating] AS r "
-        "INNER JOIN ProductSku AS ps ON r.product_sku_id = ps.id "
-        "INNER JOIN Product AS p ON ps.idProduct = p.id "
-        "ORDER BY r.id_user"
+        "WITH RankedRatings AS (SELECT r.id_user AS userId, p.id AS productId, r.product_quality AS rating, r.created_date AS timestamp, ROW_NUMBER() OVER (PARTITION BY r.id_user, p.id ORDER BY r.created_date DESC) AS row_num FROM [Rating] AS r INNER JOIN ProductSku AS ps ON r.product_sku_id = ps.id INNER JOIN Product AS p ON ps.idProduct = p.id) "
+        "SELECT userId, productId, rating, timestamp FROM RankedRatings WHERE row_num = 1 ORDER BY userId;"
     )
     dataOriginal = [
         [
