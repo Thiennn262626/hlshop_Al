@@ -20,18 +20,31 @@ class CF(object):
 
     def normalize_Y(self):
         users = self.Y_data[:, 0] # all users - first col of the Y_data
-        self.Ybar_data = self.Y_data.astype(np.float64).copy()
+        self.Ybar_data = self.Y_data[:, :3].astype(np.float64).copy()
         self.mu = np.zeros((self.n_users,))
         for n in range(self.n_users):
             ids = np.where(users == n)[0].astype(np.int32)
             item_ids = self.Y_data[ids, 1]
             ratings = self.Y_data[ids, 2]
+            # avg rating dulicate item_ids
+            if(item_ids.size > 1):
+                unique_item_ids = np.unique(item_ids)
+                for item_id in unique_item_ids:
+                    idx = np.where(item_ids == item_id)[0]
+                    if len(idx) > 1:
+                        average_rating = np.mean(ratings[idx])
+                        self.Ybar_data[ids[idx[:-1]], 2] = average_rating - self.mu[n]
+                        #update ratings
+                        ratings[idx] = average_rating
+
             m = np.mean(ratings)
             if np.isnan(m):
                 m = 0
             # self.mu[n] = m
             # normalize
             self.Ybar_data[ids, 2] = ratings - self.mu[n]
+
+
         self.Ybar = sparse.coo_matrix((self.Ybar_data[:, 2],
             (self.Ybar_data[:, 1], self.Ybar_data[:, 0])), (self.n_items, self.n_users))
         self.Ybar = self.Ybar.tocsr()
